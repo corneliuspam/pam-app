@@ -1,18 +1,30 @@
 {
   "name": "pam-app",
   "version": "1.0.0",
-  "description": "PAM Chat App",
+  "description": "PAM APP Messenger-style chat with Google login",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
+  "keywords": [
+    "chat",
+    "messenger",
+    "socket.io",
+    "google-oauth",
+    "nodejs",
+    "mongodb"
+  ],
+  "author": "YourName",
+  "license": "MIT",
   "dependencies": {
     "cookie-parser": "^1.4.6",
-    "dotenv": "^16.3.1",
     "express": "^4.18.2",
-    "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.1.1",
-    "passport": "^0.7.0",
-    "passport-google-oauth20": "^2.0.0"
+    "jsonwebtoken": "^9.0.0",
+    "mongoose": "^7.5.0",
+    "multer": "^1.4.5-lts.1",
+    "passport": "^0.6.0",
+    "passport-google-oauth20": "^2.0.0",
+    "socket.io": "^4.7.2",
+    "dotenv": "^16.3.1"
   }
 }
