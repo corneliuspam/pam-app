@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>PAM APP Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="/style.css">
+<script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+<div class="container">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="profile" id="profile-info">
+      <img id="profile-pic" src="" alt="Profile Pic">
+      <h3 id="profile-name"></h3>
+      <p id="profile-status"></p>
+    </div>
+    <hr>
+    <div id="users-list"></div>
+  </div>
+
+  <!-- Chat Window -->
+  <div class="chat-window">
+    <div id="chat-header"></div>
+    <div id="chat-messages"></div>
+    <div class="chat-input">
+      <input type="text" id="message-input" placeholder="Type a message...">
+      <input type="file" id="image-input">
+      <button id="send-btn">Send</button>
+    </div>
+  </div>
+</div>
+
+<script src="/app.js"></script>
+</body>
+</html>
