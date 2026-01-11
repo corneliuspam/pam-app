@@ -1,20 +1,24 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>PAM App Login</title>
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PAM APP Login</title>
   <link rel="stylesheet" href="style.css">
 </head>
-<body class="login">
+<body class="login-body">
 
-<h2>PAM APP</h2>
+<div class="login-container">
+  <h1>PAM APP</h1>
+  <p class="subtitle">Sign in with your username or phone</p>
 
-<input id="username" placeholder="Username">
-<input id="phone" placeholder="Phone Number">
-<input type="file" id="profilePic">
-<button id="loginBtn">Login / Register</button>
+  <input id="username" type="text" placeholder="Username" class="input-field">
+  <input id="phone" type="text" placeholder="Phone Number" class="input-field">
+  <input type="file" id="profilePic" class="input-field file-upload">
 
-<p id="error"></p>
+  <button id="loginBtn" class="btn">Login / Register</button>
+  <p class="note">Your profile picture will be visible to others</p>
+</div>
 
 <script src="login.js"></script>
 </body>
