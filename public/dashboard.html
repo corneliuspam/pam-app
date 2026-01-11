@@ -1,18 +1,23 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>PAM APP – Chat</title>
+<head><meta name="theme-color" content="#020617">
+  <title>PAM APP</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div class="chat-container">
-  <div class="chat-header">PAM APP Chat</div>
+  <div class="chat-header">
+    <div class="profile-circle" id="profile"></div>
+    <div>PAM APP</div>
+  </div>
+
   <div id="messages" class="chat-messages"></div>
 
   <div class="chat-input">
-    <input id="msg" placeholder="Type a message..." />
-    <button onclick="sendMessage()">Send</button>
+    <input id="msg" placeholder="Message…" />
+    <button onclick="sendMessage()">➤</button>
   </div>
 </div>
 
