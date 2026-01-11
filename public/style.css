@@ -139,3 +139,37 @@ body {
   color: white;
   font-size: 15px;
 }
+
+.avatar {
+  position: relative;
+}
+
+.avatar img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.status-dot {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  background: #22c55e;
+  border-radius: 50%;
+  border: 2px solid #020617;
+}
+
+.message img {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+
+.message {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
