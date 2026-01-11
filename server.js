@@ -1,46 +1,60 @@
 const express = require("express");
 const http = require("http");
-const { Server } = require("socket.io");
 const path = require("path");
+const { Server } = require("socket.io");
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
-app.use(express.static("public"));
+// IMPORTANT: Render provides PORT
+const PORT = process.env.PORT || 10000;
 
-/* ROOT */
+// Serve static files
+app.use(express.static(path.join(__dirname, "public")));
+
+// Routes
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-/* ONLINE USERS */
-const onlineUsers = new Set();
+app.get("/dashboard", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "dashboard.html"));
+});
 
+// In-memory users (NO DB)
+let users = {};
+
+// Socket.io
 io.on("connection", (socket) => {
+  console.log("User connected:", socket.id);
 
-  socket.on("join", (username) => {
-    socket.username = username;
-    onlineUsers.add(username);
-    io.emit("online", Array.from(onlineUsers));
+  socket.on("join", (user) => {
+    // user = { name, avatar }
+    users[socket.id] = user;
+
+    // Notify everyone
+    io.emit("system", `${user.name} is online`);
+    io.emit("online-users", Object.values(users));
   });
 
-  socket.on("chatMessage", (data) => {
-    io.emit("chatMessage", {
-      user: data.user,
-      message: data.message,
-      time: new Date().toLocaleTimeString()
-    });
+  socket.on("message", (data) => {
+    // data = { name, avatar, text }
+    io.emit("message", data);
   });
 
   socket.on("disconnect", () => {
-    if (socket.username) {
-      onlineUsers.delete(socket.username);
-      io.emit("online", Array.from(onlineUsers));
+    const user = users[socket.id];
+    if (user) {
+      io.emit("system", `${user.name} went offline`);
+      delete users[socket.id];
+      io.emit("online-users", Object.values(users));
     }
+    console.log("User disconnected:", socket.id);
   });
 });
 
-server.listen(process.env.PORT || 3000, () => {
-  console.log("PAM App running");
+// Start server
+server.listen(PORT, () => {
+  console.log("✅ PAM APP running on port", PORT);
 });
