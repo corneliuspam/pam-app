@@ -1,78 +1,64 @@
 const socket = io();
 
-let username = localStorage.getItem("pam_username") || "Guest_" + Math.floor(Math.random()*999);
-localStorage.setItem("pam_username", username);
+const name = localStorage.getItem("pam_user");
+const avatar = localStorage.getItem("pam_avatar");
 
-document.getElementById("username").innerText = username;
+if (!name) location.href = "/";
 
-socket.emit("join", username);
+document.getElementById("usernameLabel").innerText = name;
 
-const chatBox = document.getElementById("chatBox");
-const input = document.getElementById("messageInput");
+if (avatar) {
+  document.getElementById("avatarImg").src = avatar;
+} else {
+  document.getElementById("avatarImg").src =
+    "https://ui-avatars.com/api/?name=" + name;
+}
 
-// Send message
+socket.emit("join", { name, avatar });
+
+socket.on("message", (data) => {
+  addMessage(data);
+});
+
+socket.on("system", (msg) => {
+  const div = document.createElement("div");
+  div.className = "system";
+  div.innerText = msg;
+  messages.appendChild(div);
+});
+
+socket.on("online-users", (users) => {
+  document.getElementById("statusText").innerText =
+    "Online users: " + users.length;
+});
+
 function sendMessage() {
+  const input = document.getElementById("msg");
   if (!input.value.trim()) return;
 
-  socket.emit("chatMessage", {
-    user: username,
-    message: input.value
+  socket.emit("message", {
+    name,
+    avatar,
+    text: input.value
   });
+
   input.value = "";
 }
 
-document.getElementById("sendBtn").onclick = sendMessage;
-
-// Receive message
-socket.on("chatMessage", (data) => {
+function addMessage(data) {
   const div = document.createElement("div");
-  div.className = "message";
+  div.className = "message " + (data.name === name ? "me" : "other");
 
-  div.innerHTML = `
-    <strong>${data.user}</strong>
-    <small>${data.time}</small><br>
-    ${data.message}
-    <div class="reactions">
-      <span onclick="react('❤️')">❤️</span>
-      <span onclick="react('👍')">👍</span>
-      <span onclick="react('😂')">😂</span>
-    </div>
-  `;
-  chatBox.appendChild(div);
-  chatBox.scrollTop = chatBox.scrollHeight;
-});
+  const img = document.createElement("img");
+  img.src = data.avatar || "https://ui-avatars.com/api/?name=" + data.name;
 
-// Reactions
-function react(emoji) {
-  socket.emit("reaction", { emoji });
+  const span = document.createElement("span");
+  span.innerText =
+    data.name === name ? data.text : `${data.name}: ${data.text}`;
+
+  div.appendChild(img);
+  div.appendChild(span);
+
+  messages.appendChild(div);
+  messages.scrollTop = messages.scrollHeight;
 }
-
-socket.on("reaction", (data) => {
-  chatBox.innerHTML += `<div>${data.emoji}</div>`;
-});
-
-// Online status
-socket.on("status", (users) => {
-  document.querySelector(".status").innerText =
-    users[username] ? "Online" : "Offline";
-});
-
-// Dark mode
-document.getElementById("darkToggle").onclick = () => {
-  document.body.classList.toggle("dark");
-  localStorage.setItem("dark", document.body.classList.contains("dark"));
-};
-
-if (localStorage.getItem("dark") === "true") {
-  document.body.classList.add("dark");
-}
-
-// Profile upload
-document.getElementById("avatarInput").onchange = async (e) => {
-  const form = new FormData();
-  form.append("avatar", e.target.files[0]);
-
-  const res = await fetch("/upload", { method: "POST", body: form });
-  const data = await res.json();
-  document.getElementById("avatar").src = data.image;
-};
