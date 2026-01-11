@@ -1,64 +1,57 @@
 const socket = io();
 
-const name = localStorage.getItem("pam_user");
-const avatar = localStorage.getItem("pam_avatar");
+let user = JSON.parse(localStorage.getItem("pamUser"));
+if (!user) location.href = "/";
 
-if (!name) location.href = "/";
+document.getElementById("userPic").src = user.profile || "https://via.placeholder.com/40";
+document.getElementById("usernameDisplay").textContent = user.username;
 
-document.getElementById("usernameLabel").innerText = name;
+const chat = document.getElementById("chat");
+const input = document.getElementById("msg");
+const sendBtn = document.getElementById("sendBtn");
+const status = document.getElementById("status");
 
-if (avatar) {
-  document.getElementById("avatarImg").src = avatar;
-} else {
-  document.getElementById("avatarImg").src =
-    "https://ui-avatars.com/api/?name=" + name;
-}
+// JOIN
+socket.emit("join", user.username);
 
-socket.emit("join", { name, avatar });
-
-socket.on("message", (data) => {
-  addMessage(data);
-});
-
-socket.on("system", (msg) => {
-  const div = document.createElement("div");
-  div.className = "system";
-  div.innerText = msg;
-  messages.appendChild(div);
-});
-
-socket.on("online-users", (users) => {
-  document.getElementById("statusText").innerText =
-    "Online users: " + users.length;
-});
-
-function sendMessage() {
-  const input = document.getElementById("msg");
+// SEND MESSAGE
+sendBtn.addEventListener("click", () => {
   if (!input.value.trim()) return;
-
-  socket.emit("message", {
-    name,
-    avatar,
-    text: input.value
-  });
-
+  socket.emit("chatMessage", { user: user.username, profile: user.profile, message: input.value });
   input.value = "";
-}
+});
+input.addEventListener("keydown", e => { if (e.key==="Enter") sendBtn.click(); });
 
-function addMessage(data) {
+// RECEIVE
+socket.on("chatMessage", data => {
   const div = document.createElement("div");
-  div.className = "message " + (data.name === name ? "me" : "other");
+  div.className = data.user===user.username?"me":"other";
+  div.innerHTML=`
+    <img src="${data.profile||'https://via.placeholder.com/30'}">
+    <div>
+      <b>${data.user}</b><br>${data.message}<br>
+      <small>${data.time}</small>
+    </div>`;
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+});
 
-  const img = document.createElement("img");
-  img.src = data.avatar || "https://ui-avatars.com/api/?name=" + data.name;
+// ONLINE
+socket.on("online", users => {
+  status.textContent = users.includes(user.username) ? "● Online" : "● Offline";
+});
 
-  const span = document.createElement("span");
-  span.innerText =
-    data.name === name ? data.text : `${data.name}: ${data.text}`;
+// DARK MODE
+const darkBtn = document.getElementById("darkBtn");
+darkBtn.addEventListener("click",()=>{
+  document.body.classList.toggle("dark");
+  localStorage.setItem("dark", document.body.classList.contains("dark"));
+});
+if(localStorage.getItem("dark")==="true") document.body.classList.add("dark");
 
-  div.appendChild(img);
-  div.appendChild(span);
-
-  messages.appendChild(div);
-  messages.scrollTop = messages.scrollHeight;
-}
+// ABOUT
+const aboutBtn = document.getElementById("aboutBtn");
+const aboutModal = document.getElementById("aboutModal");
+const closeAbout = document.getElementById("closeAbout");
+aboutBtn.addEventListener("click",()=>aboutModal.style.display="flex");
+closeAbout.addEventListener("click",()=>aboutModal.style.display="none");
