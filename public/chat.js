@@ -1,5 +1,6 @@
 const socket = io();
 
+const messages = document.getElementById("messages"); // ✅ FIX
 const name = localStorage.getItem("pam_user");
 const avatar = localStorage.getItem("pam_avatar");
 
