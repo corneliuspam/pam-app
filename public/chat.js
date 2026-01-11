@@ -1,84 +1,110 @@
+// ===============================
+// PAM APP – CHAT.JS (SAFE VERSION)
+// ===============================
+
+// Connect to socket.io
 const socket = io();
 
-const messages = document.getElementById("messages"); // ✅ FIX
-const name = localStorage.getItem("pam_user");
-const avatar = localStorage.getItem("pam_avatar");
+// Elements
+const chatBox = document.getElementById("chatBox");
+const messageInput = document.getElementById("messageInput");
+const sendBtn = document.getElementById("sendBtn");
 
-if (!name) location.href = "/";
-
-document.getElementById("usernameLabel").innerText = name;
-
-if (avatar) {
-  document.getElementById("avatarImg").src = avatar;
-} else {
-  document.getElementById("avatarImg").src =
-    "https://ui-avatars.com/api/?name=" + name;
+// Get username (fallback to Guest)
+let username = localStorage.getItem("pam_username");
+if (!username) {
+  username = "Guest_" + Math.floor(Math.random() * 1000);
+  localStorage.setItem("pam_username", username);
 }
 
-socket.emit("join", { name, avatar });
+// Show username in header if element exists
+const usernameEl = document.getElementById("username");
+if (usernameEl) {
+  usernameEl.textContent = username;
+}
 
-socket.on("message", (data) => {
-  addMessage(data);
-});
-
-socket.on("system", (msg) => {
-  const div = document.createElement("div");
-  div.className = "system";
-  div.innerText = msg;
-  messages.appendChild(div);
-});
-
-socket.on("online-users", (users) => {
-  document.getElementById("statusText").innerText =
-    "Online users: " + users.length;
-});
-
+// ===============================
+// SEND MESSAGE
+// ===============================
 function sendMessage() {
-  const input = document.getElementById("msg");
-  if (!input.value.trim()) return;
+  const text = messageInput.value.trim();
+  if (!text) return;
 
-  socket.emit("message", {
-    name,
-    avatar,
-    text: input.value
+  socket.emit("chatMessage", {
+    user: username,
+    message: text,
   });
 
-  input.value = "";
+  messageInput.value = "";
 }
 
-function addMessage(data) {
-  const div = document.createElement("div");
-  div.className = "message " + (data.name === name ? "me" : "other");
-
-  const img = document.createElement("img");
-  img.src = data.avatar || "https://ui-avatars.com/api/?name=" + data.name;
-
-  const span = document.createElement("span");
-  span.innerText =
-    data.name === name ? data.text : `${data.name}: ${data.text}`;
-
-  div.appendChild(img);
-  div.appendChild(span);
-
-  messages.appendChild(div);
-  messages.scrollTop = messages.scrollHeight;
+// Button click
+if (sendBtn) {
+  sendBtn.addEventListener("click", sendMessage);
 }
 
-// Modal logic
-const infoBtn = document.getElementById("infoBtn");
-const infoModal = document.getElementById("infoModal");
-const closeModal = document.getElementById("closeModal");
+// Enter key
+if (messageInput) {
+  messageInput.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") sendMessage();
+  });
+}
 
-infoBtn.addEventListener("click", () => {
-  infoModal.style.display = "block";
-});
+// ===============================
+// RECEIVE MESSAGE
+// ===============================
+socket.on("chatMessage", (data) => {
+  if (!chatBox) return;
 
-closeModal.addEventListener("click", () => {
-  infoModal.style.display = "none";
-});
+  const msgDiv = document.createElement("div");
+  msgDiv.classList.add("message");
 
-window.addEventListener("click", (e) => {
-  if (e.target === infoModal) {
-    infoModal.style.display = "none";
+  if (data.user === username) {
+    msgDiv.classList.add("you");
   }
+
+  msgDiv.innerHTML = `<strong>${data.user}:</strong><br>${data.message}`;
+  chatBox.appendChild(msgDiv);
+
+  // Auto scroll
+  chatBox.scrollTop = chatBox.scrollHeight;
+});
+
+// ===============================
+// ABOUT MODAL (SAFE VERSION)
+// ===============================
+document.addEventListener("DOMContentLoaded", () => {
+  const infoBtn = document.getElementById("infoBtn");
+  const infoModal = document.getElementById("infoModal");
+  const closeModal = document.getElementById("closeModal");
+
+  if (!infoBtn || !infoModal || !closeModal) {
+    console.warn("About modal elements missing");
+    return;
+  }
+
+  infoBtn.addEventListener("click", () => {
+    infoModal.style.display = "block";
+  });
+
+  closeModal.addEventListener("click", () => {
+    infoModal.style.display = "none";
+  });
+
+  window.addEventListener("click", (e) => {
+    if (e.target === infoModal) {
+      infoModal.style.display = "none";
+    }
+  });
+});
+
+// ===============================
+// CONNECTION STATUS (OPTIONAL)
+// ===============================
+socket.on("connect", () => {
+  console.log("Connected to PAM server");
+});
+
+socket.on("disconnect", () => {
+  console.log("Disconnected from server");
 });
