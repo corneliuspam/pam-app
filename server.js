@@ -10,14 +10,15 @@ const server = http.createServer(app);
 const io = new Server(server);
 
 app.use(express.json());
-app.use(express.static("public"));
+app.use(express.urlencoded({ extended: true }));
 app.use(fileUpload());
-
-// In-memory users
-let users = [];
+app.use(express.static("public"));
 
 // Ensure uploads folder exists
 if (!fs.existsSync("./uploads")) fs.mkdirSync("./uploads");
+
+// In-memory users
+let users = [];
 
 // LOGIN / REGISTER
 app.post("/login", (req, res) => {
@@ -36,8 +37,8 @@ app.post("/login", (req, res) => {
   if (!user) {
     user = { username, phone, profile };
     users.push(user);
-  } else {
-    if (profile) user.profile = profile; // update profile pic
+  } else if (profile) {
+    user.profile = profile;
   }
 
   res.json({ success: true, user });
