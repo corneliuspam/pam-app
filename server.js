@@ -1,60 +1,57 @@
 const express = require("express");
 const http = require("http");
-const path = require("path");
 const { Server } = require("socket.io");
+const fileUpload = require("express-fileupload");
+const path = require("path");
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
-// IMPORTANT: Render provides PORT
-const PORT = process.env.PORT || 10000;
+app.use(express.json());
+app.use(fileUpload());
+app.use(express.static("public"));
+app.use("/uploads", express.static("uploads"));
 
-// Serve static files
-app.use(express.static(path.join(__dirname, "public")));
+const usersOnline = {};
 
-// Routes
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
+// Upload profile picture
+app.post("/upload", (req, res) => {
+  if (!req.files) return res.status(400).send("No file");
+
+  const file = req.files.avatar;
+  const name = Date.now() + "_" + file.name;
+  file.mv(path.join(__dirname, "uploads", name));
+
+  res.json({ image: "/uploads/" + name });
 });
-
-app.get("/dashboard", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "dashboard.html"));
-});
-
-// In-memory users (NO DB)
-let users = {};
 
 // Socket.io
 io.on("connection", (socket) => {
-  console.log("User connected:", socket.id);
-
-  socket.on("join", (user) => {
-    // user = { name, avatar }
-    users[socket.id] = user;
-
-    // Notify everyone
-    io.emit("system", `${user.name} is online`);
-    io.emit("online-users", Object.values(users));
-  });
-
-  socket.on("message", (data) => {
-    // data = { name, avatar, text }
-    io.emit("message", data);
+  socket.on("join", (username) => {
+    usersOnline[username] = true;
+    io.emit("status", usersOnline);
   });
 
   socket.on("disconnect", () => {
-    const user = users[socket.id];
-    if (user) {
-      io.emit("system", `${user.name} went offline`);
-      delete users[socket.id];
-      io.emit("online-users", Object.values(users));
+    for (let user in usersOnline) {
+      if (usersOnline[user]) delete usersOnline[user];
     }
-    console.log("User disconnected:", socket.id);
+    io.emit("status", usersOnline);
+  });
+
+  socket.on("chatMessage", (data) => {
+    io.emit("chatMessage", {
+      ...data,
+      time: new Date().toLocaleTimeString(),
+    });
+  });
+
+  socket.on("reaction", (data) => {
+    io.emit("reaction", data);
   });
 });
 
-// Start server
-server.listen(PORT, () => {
-  console.log("✅ PAM APP running on port", PORT);
-});
+server.listen(process.env.PORT || 3000, () =>
+  console.log("PAM App running")
+);
