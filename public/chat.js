@@ -1,65 +1,53 @@
 const socket = io();
 
-const messages = document.getElementById("messages"); // ✅ FIX
-const name = localStorage.getItem("pam_user");
-const avatar = localStorage.getItem("pam_avatar");
-
-if (!name) location.href = "/";
-
-document.getElementById("usernameLabel").innerText = name;
-
-if (avatar) {
-  document.getElementById("avatarImg").src = avatar;
-} else {
-  document.getElementById("avatarImg").src =
-    "https://ui-avatars.com/api/?name=" + name;
+// Auto-generate username
+let username = localStorage.getItem("pamUser");
+if (!username) {
+  username = "Guest_" + Math.floor(Math.random() * 10000);
+  localStorage.setItem("pamUser", username);
 }
 
-socket.emit("join", { name, avatar });
+// Elements
+const chat = document.getElementById("chat");
+const input = document.getElementById("msg");
+const sendBtn = document.getElementById("sendBtn");
+const status = document.getElementById("status");
 
-socket.on("message", (data) => {
-  addMessage(data);
-});
+// Join chat
+socket.emit("join", username);
 
-socket.on("system", (msg) => {
-  const div = document.createElement("div");
-  div.className = "system";
-  div.innerText = msg;
-  messages.appendChild(div);
-});
-
-socket.on("online-users", (users) => {
-  document.getElementById("statusText").innerText =
-    "Online users: " + users.length;
-});
-
-function sendMessage() {
-  const input = document.getElementById("msg");
+// Send message
+sendBtn.addEventListener("click", () => {
   if (!input.value.trim()) return;
-
-  socket.emit("message", {
-    name,
-    avatar,
-    text: input.value
-  });
-
+  socket.emit("chatMessage", { user: username, message: input.value });
   input.value = "";
-}
+});
 
-function addMessage(data) {
+// Send on Enter key
+input.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") sendBtn.click();
+});
+
+// Receive message
+socket.on("chatMessage", (data) => {
   const div = document.createElement("div");
-  div.className = "message " + (data.name === name ? "me" : "other");
+  div.className = data.user === username ? "me" : "other";
+  div.innerHTML = `<b>${data.user}</b><br>${data.message}<br><small>${data.time}</small>`;
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+});
 
-  const img = document.createElement("img");
-  img.src = data.avatar || "https://ui-avatars.com/api/?name=" + data.name;
+// Online status
+socket.on("online", (users) => {
+  status.textContent = users.includes(username) ? "● Online" : "● Offline";
+});
 
-  const span = document.createElement("span");
-  span.innerText =
-    data.name === name ? data.text : `${data.name}: ${data.text}`;
-
-  div.appendChild(img);
-  div.appendChild(span);
-
-  messages.appendChild(div);
-  messages.scrollTop = messages.scrollHeight;
+// Dark mode
+const darkBtn = document.getElementById("darkBtn");
+darkBtn.addEventListener("click", () => {
+  document.body.classList.toggle("dark");
+  localStorage.setItem("dark", document.body.classList.contains("dark"));
+});
+if (localStorage.getItem("dark") === "true") {
+  document.body.classList.add("dark");
 }
