@@ -22,9 +22,10 @@ app.get("/dashboard", (req, res) => {
 let users = {};
 
 io.on("connection", (socket) => {
-  socket.on("join", (username) => {
-    users[socket.id] = username;
-    io.emit("system", `${username} joined the chat`);
+  socket.on("join", (user) => {
+    users[socket.id] = user;
+    io.emit("online-users", Object.values(users));
+    io.emit("system", `${user.name} is online`);
   });
 
   socket.on("message", (data) => {
@@ -32,13 +33,11 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    if (users[socket.id]) {
-      io.emit("system", `${users[socket.id]} left the chat`);
+    const user = users[socket.id];
+    if (user) {
+      io.emit("system", `${user.name} went offline`);
       delete users[socket.id];
+      io.emit("online-users", Object.values(users));
     }
   });
-});
-
-server.listen(PORT, () => {
-  console.log("PAM APP running on port", PORT);
 });
