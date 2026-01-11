@@ -1,30 +1,39 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>PAM APP</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#020617">
+  <title>PAM CHAT</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="chat-container">
-  <div class="chat-header">
-    <div class="avatar">
-      <img id="avatarImg" />
-      <span class="status-dot" id="statusDot"></span>
-    </div>
+<header>
+  <div class="left">
+    <img id="userPic" src="" alt="Profile" class="profileIcon">
     <div>
-      <div id="usernameLabel"></div>
-      <small id="statusText">Online</small>
+      <span id="usernameDisplay"></span>
+      <small id="status">● Offline</small>
     </div>
   </div>
+  <div class="right">
+    <button id="darkBtn">🌙</button>
+    <button id="aboutBtn">ℹ️</button>
+  </div>
+</header>
 
-  <div id="messages" class="chat-messages"></div>
+<div id="chat" class="chatContainer"></div>
 
-  <div class="chat-input">
-    <input id="msg" placeholder="Message…" />
-    <button onclick="sendMessage()">➤</button>
+<div class="inputBox">
+  <input id="msg" placeholder="Type a message">
+  <button id="sendBtn">Send</button>
+</div>
+
+<div id="aboutModal" class="modal">
+  <div class="modalBox">
+    <span id="closeAbout">✖</span>
+    <h3>About PAM App</h3>
+    <p><b>Creator:</b> Cornelius Pam Cyprian</p>
+    <p>Stylish public group chat with profile pictures.</p>
   </div>
 </div>
 
