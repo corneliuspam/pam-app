@@ -1,15 +1,23 @@
 const socket = io();
-const username = localStorage.getItem("pam_user");
 
-if (!username) location.href = "/";
+const name = localStorage.getItem("pam_user");
+const avatar = localStorage.getItem("pam_avatar");
 
-document.getElementById("profile").innerText =
-  username.charAt(0).toUpperCase();
+if (!name) location.href = "/";
 
-socket.emit("join", username);
+document.getElementById("usernameLabel").innerText = name;
+
+if (avatar) {
+  document.getElementById("avatarImg").src = avatar;
+} else {
+  document.getElementById("avatarImg").src =
+    "https://ui-avatars.com/api/?name=" + name;
+}
+
+socket.emit("join", { name, avatar });
 
 socket.on("message", (data) => {
-  addMessage(data.user, data.text);
+  addMessage(data);
 });
 
 socket.on("system", (msg) => {
@@ -19,22 +27,38 @@ socket.on("system", (msg) => {
   messages.appendChild(div);
 });
 
+socket.on("online-users", (users) => {
+  document.getElementById("statusText").innerText =
+    "Online users: " + users.length;
+});
+
 function sendMessage() {
   const input = document.getElementById("msg");
   if (!input.value.trim()) return;
 
   socket.emit("message", {
-    user: username,
+    name,
+    avatar,
     text: input.value
   });
 
   input.value = "";
 }
 
-function addMessage(user, text) {
+function addMessage(data) {
   const div = document.createElement("div");
-  div.className = "message " + (user === username ? "me" : "other");
-  div.innerText = user === username ? text : `${user}: ${text}`;
+  div.className = "message " + (data.name === name ? "me" : "other");
+
+  const img = document.createElement("img");
+  img.src = data.avatar || "https://ui-avatars.com/api/?name=" + data.name;
+
+  const span = document.createElement("span");
+  span.innerText =
+    data.name === name ? data.text : `${data.name}: ${data.text}`;
+
+  div.appendChild(img);
+  div.appendChild(span);
+
   messages.appendChild(div);
   messages.scrollTop = messages.scrollHeight;
 }
