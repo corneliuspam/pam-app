@@ -1,68 +1,84 @@
 const express = require("express");
 const http = require("http");
-const path = require("path");
 const { Server } = require("socket.io");
+const path = require("path");
+const fileUpload = require("express-fileupload");
+const fs = require("fs");
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
-// IMPORTANT: Render provides PORT
-const PORT = process.env.PORT || 10000;
+app.use(express.json());
+app.use(express.static("public"));
+app.use(fileUpload());
 
-// Serve static files
-app.use(express.static(path.join(__dirname, "public")));
+// In-memory users
+let users = [];
 
-// Routes
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
+// Ensure uploads folder exists
+if (!fs.existsSync("./uploads")) fs.mkdirSync("./uploads");
+
+// LOGIN / REGISTER
+app.post("/login", (req, res) => {
+  const { username, phone } = req.body;
+  let profile = null;
+
+  if (req.files && req.files.profilePic) {
+    const file = req.files.profilePic;
+    const filename = `${Date.now()}_${file.name}`;
+    const filepath = path.join(__dirname, "uploads", filename);
+    file.mv(filepath);
+    profile = `/uploads/${filename}`;
+  }
+
+  let user = users.find(u => u.username === username || u.phone === phone);
+  if (!user) {
+    user = { username, phone, profile };
+    users.push(user);
+  } else {
+    if (profile) user.profile = profile; // update profile pic
+  }
+
+  res.json({ success: true, user });
 });
 
+// Serve uploaded images
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+// DASHBOARD
 app.get("/dashboard", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "dashboard.html"));
 });
 
-// In-memory users (NO DB)
-let users = {};
+// SOCKET.IO
+const onlineUsers = new Set();
 
-// Socket.io
-io.on("connection", (socket) => {
-  console.log("User connected:", socket.id);
-
-  socket.on("join", (user) => {
-    // user = { name, avatar }
-    users[socket.id] = user;
-
-    // Notify everyone
-    io.emit("system", `${user.name} is online`);
-    io.emit("online-users", Object.values(users));
+io.on("connection", socket => {
+  socket.on("join", username => {
+    socket.username = username;
+    onlineUsers.add(username);
+    io.emit("online", Array.from(onlineUsers));
   });
 
-  socket.on("message", (data) => {
-    // data = { name, avatar, text }
-    io.emit("message", data);
+  socket.on("chatMessage", data => {
+    io.emit("chatMessage", {
+      user: data.user,
+      profile: data.profile || null,
+      message: data.message,
+      time: new Date().toLocaleTimeString()
+    });
   });
-  
-socket.on("chatMessage", (data) => {
-  io.emit("chatMessage", {
-    user: data.user,
-    message: data.message,
-    time: new Date().toLocaleTimeString()
-  });
-});
-  
+
   socket.on("disconnect", () => {
-    const user = users[socket.id];
-    if (user) {
-      io.emit("system", `${user.name} went offline`);
-      delete users[socket.id];
-      io.emit("online-users", Object.values(users));
+    if (socket.username) {
+      onlineUsers.delete(socket.username);
+      io.emit("online", Array.from(onlineUsers));
     }
-    console.log("User disconnected:", socket.id);
   });
 });
 
-// Start server
-server.listen(PORT, () => {
-  console.log("✅ PAM APP running on port", PORT);
+// PORT
+server.listen(process.env.PORT || 3000, () => {
+  console.log("PAM App running");
 });
