@@ -63,3 +63,22 @@ function addMessage(data) {
   messages.appendChild(div);
   messages.scrollTop = messages.scrollHeight;
 }
+
+// Modal logic
+const infoBtn = document.getElementById("infoBtn");
+const infoModal = document.getElementById("infoModal");
+const closeModal = document.getElementById("closeModal");
+
+infoBtn.addEventListener("click", () => {
+  infoModal.style.display = "block";
+});
+
+closeModal.addEventListener("click", () => {
+  infoModal.style.display = "none";
+});
+
+window.addEventListener("click", (e) => {
+  if (e.target === infoModal) {
+    infoModal.style.display = "none";
+  }
+});
