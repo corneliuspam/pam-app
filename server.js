@@ -42,7 +42,15 @@ io.on("connection", (socket) => {
     // data = { name, avatar, text }
     io.emit("message", data);
   });
-
+  
+socket.on("chatMessage", (data) => {
+  io.emit("chatMessage", {
+    user: data.user,
+    message: data.message,
+    time: new Date().toLocaleTimeString()
+  });
+});
+  
   socket.on("disconnect", () => {
     const user = users[socket.id];
     if (user) {
