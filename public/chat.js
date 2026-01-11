@@ -1,110 +1,78 @@
-// ===============================
-// PAM APP – CHAT.JS (SAFE VERSION)
-// ===============================
-
-// Connect to socket.io
 const socket = io();
 
-// Elements
+let username = localStorage.getItem("pam_username") || "Guest_" + Math.floor(Math.random()*999);
+localStorage.setItem("pam_username", username);
+
+document.getElementById("username").innerText = username;
+
+socket.emit("join", username);
+
 const chatBox = document.getElementById("chatBox");
-const messageInput = document.getElementById("messageInput");
-const sendBtn = document.getElementById("sendBtn");
+const input = document.getElementById("messageInput");
 
-// Get username (fallback to Guest)
-let username = localStorage.getItem("pam_username");
-if (!username) {
-  username = "Guest_" + Math.floor(Math.random() * 1000);
-  localStorage.setItem("pam_username", username);
-}
-
-// Show username in header if element exists
-const usernameEl = document.getElementById("username");
-if (usernameEl) {
-  usernameEl.textContent = username;
-}
-
-// ===============================
-// SEND MESSAGE
-// ===============================
+// Send message
 function sendMessage() {
-  const text = messageInput.value.trim();
-  if (!text) return;
+  if (!input.value.trim()) return;
 
   socket.emit("chatMessage", {
     user: username,
-    message: text,
+    message: input.value
   });
-
-  messageInput.value = "";
+  input.value = "";
 }
 
-// Button click
-if (sendBtn) {
-  sendBtn.addEventListener("click", sendMessage);
-}
+document.getElementById("sendBtn").onclick = sendMessage;
 
-// Enter key
-if (messageInput) {
-  messageInput.addEventListener("keypress", (e) => {
-    if (e.key === "Enter") sendMessage();
-  });
-}
-
-// ===============================
-// RECEIVE MESSAGE
-// ===============================
+// Receive message
 socket.on("chatMessage", (data) => {
-  if (!chatBox) return;
+  const div = document.createElement("div");
+  div.className = "message";
 
-  const msgDiv = document.createElement("div");
-  msgDiv.classList.add("message");
-
-  if (data.user === username) {
-    msgDiv.classList.add("you");
-  }
-
-  msgDiv.innerHTML = `<strong>${data.user}:</strong><br>${data.message}`;
-  chatBox.appendChild(msgDiv);
-
-  // Auto scroll
+  div.innerHTML = `
+    <strong>${data.user}</strong>
+    <small>${data.time}</small><br>
+    ${data.message}
+    <div class="reactions">
+      <span onclick="react('❤️')">❤️</span>
+      <span onclick="react('👍')">👍</span>
+      <span onclick="react('😂')">😂</span>
+    </div>
+  `;
+  chatBox.appendChild(div);
   chatBox.scrollTop = chatBox.scrollHeight;
 });
 
-// ===============================
-// ABOUT MODAL (SAFE VERSION)
-// ===============================
-document.addEventListener("DOMContentLoaded", () => {
-  const infoBtn = document.getElementById("infoBtn");
-  const infoModal = document.getElementById("infoModal");
-  const closeModal = document.getElementById("closeModal");
+// Reactions
+function react(emoji) {
+  socket.emit("reaction", { emoji });
+}
 
-  if (!infoBtn || !infoModal || !closeModal) {
-    console.warn("About modal elements missing");
-    return;
-  }
-
-  infoBtn.addEventListener("click", () => {
-    infoModal.style.display = "block";
-  });
-
-  closeModal.addEventListener("click", () => {
-    infoModal.style.display = "none";
-  });
-
-  window.addEventListener("click", (e) => {
-    if (e.target === infoModal) {
-      infoModal.style.display = "none";
-    }
-  });
+socket.on("reaction", (data) => {
+  chatBox.innerHTML += `<div>${data.emoji}</div>`;
 });
 
-// ===============================
-// CONNECTION STATUS (OPTIONAL)
-// ===============================
-socket.on("connect", () => {
-  console.log("Connected to PAM server");
+// Online status
+socket.on("status", (users) => {
+  document.querySelector(".status").innerText =
+    users[username] ? "Online" : "Offline";
 });
 
-socket.on("disconnect", () => {
-  console.log("Disconnected from server");
-});
+// Dark mode
+document.getElementById("darkToggle").onclick = () => {
+  document.body.classList.toggle("dark");
+  localStorage.setItem("dark", document.body.classList.contains("dark"));
+};
+
+if (localStorage.getItem("dark") === "true") {
+  document.body.classList.add("dark");
+}
+
+// Profile upload
+document.getElementById("avatarInput").onchange = async (e) => {
+  const form = new FormData();
+  form.append("avatar", e.target.files[0]);
+
+  const res = await fetch("/upload", { method: "POST", body: form });
+  const data = await res.json();
+  document.getElementById("avatar").src = data.image;
+};
