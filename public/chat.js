@@ -1,53 +1,65 @@
 const socket = io();
 
-// Auto-generate username
-let username = localStorage.getItem("pamUser");
-if (!username) {
-  username = "Guest_" + Math.floor(Math.random() * 10000);
-  localStorage.setItem("pamUser", username);
+const messages = document.getElementById("messages"); // ✅ FIX
+const name = localStorage.getItem("pam_user");
+const avatar = localStorage.getItem("pam_avatar");
+
+if (!name) location.href = "/";
+
+document.getElementById("usernameLabel").innerText = name;
+
+if (avatar) {
+  document.getElementById("avatarImg").src = avatar;
+} else {
+  document.getElementById("avatarImg").src =
+    "https://ui-avatars.com/api/?name=" + name;
 }
 
-// Elements
-const chat = document.getElementById("chat");
-const input = document.getElementById("msg");
-const sendBtn = document.getElementById("sendBtn");
-const status = document.getElementById("status");
+socket.emit("join", { name, avatar });
 
-// Join chat
-socket.emit("join", username);
-
-// Send message
-sendBtn.addEventListener("click", () => {
-  if (!input.value.trim()) return;
-  socket.emit("chatMessage", { user: username, message: input.value });
-  input.value = "";
+socket.on("message", (data) => {
+  addMessage(data);
 });
 
-// Send on Enter key
-input.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") sendBtn.click();
-});
-
-// Receive message
-socket.on("chatMessage", (data) => {
+socket.on("system", (msg) => {
   const div = document.createElement("div");
-  div.className = data.user === username ? "me" : "other";
-  div.innerHTML = `<b>${data.user}</b><br>${data.message}<br><small>${data.time}</small>`;
-  chat.appendChild(div);
-  chat.scrollTop = chat.scrollHeight;
+  div.className = "system";
+  div.innerText = msg;
+  messages.appendChild(div);
 });
 
-// Online status
-socket.on("online", (users) => {
-  status.textContent = users.includes(username) ? "● Online" : "● Offline";
+socket.on("online-users", (users) => {
+  document.getElementById("statusText").innerText =
+    "Online users: " + users.length;
 });
 
-// Dark mode
-const darkBtn = document.getElementById("darkBtn");
-darkBtn.addEventListener("click", () => {
-  document.body.classList.toggle("dark");
-  localStorage.setItem("dark", document.body.classList.contains("dark"));
-});
-if (localStorage.getItem("dark") === "true") {
-  document.body.classList.add("dark");
+function sendMessage() {
+  const input = document.getElementById("msg");
+  if (!input.value.trim()) return;
+
+  socket.emit("message", {
+    name,
+    avatar,
+    text: input.value
+  });
+
+  input.value = "";
+}
+
+function addMessage(data) {
+  const div = document.createElement("div");
+  div.className = "message " + (data.name === name ? "me" : "other");
+
+  const img = document.createElement("img");
+  img.src = data.avatar || "https://ui-avatars.com/api/?name=" + data.name;
+
+  const span = document.createElement("span");
+  span.innerText =
+    data.name === name ? data.text : `${data.name}: ${data.text}`;
+
+  div.appendChild(img);
+  div.appendChild(span);
+
+  messages.appendChild(div);
+  messages.scrollTop = messages.scrollHeight;
 }
