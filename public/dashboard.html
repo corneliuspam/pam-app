@@ -1,16 +1,23 @@
 <!DOCTYPE html>
 <html>
-<head><meta name="theme-color" content="#020617">
+<head>
   <title>PAM APP</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#020617">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div class="chat-container">
   <div class="chat-header">
-    <div class="profile-circle" id="profile"></div>
-    <div>PAM APP</div>
+    <div class="avatar">
+      <img id="avatarImg" />
+      <span class="status-dot" id="statusDot"></span>
+    </div>
+    <div>
+      <div id="usernameLabel"></div>
+      <small id="statusText">Online</small>
+    </div>
   </div>
 
   <div id="messages" class="chat-messages"></div>
