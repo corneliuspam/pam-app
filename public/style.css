@@ -197,3 +197,56 @@ header .right button {
   cursor: pointer;
   color: #25d366;
 }
+
+/* ===== LOGIN PAGE ===== */
+.loginBody {
+  background: linear-gradient(135deg, #0b141a, #1f2c33);
+  height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loginBox {
+  background: #111b21;
+  padding: 25px;
+  width: 90%;
+  max-width: 320px;
+  border-radius: 16px;
+  text-align: center;
+}
+
+.loginBox h2 {
+  margin-bottom: 15px;
+}
+
+.loginAvatar {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #2a3942;
+  margin-bottom: 10px;
+}
+
+.loginBox input {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  border-radius: 25px;
+  border: none;
+  outline: none;
+  background: #2a3942;
+  color: white;
+}
+
+.loginBox button {
+  margin-top: 15px;
+  width: 100%;
+  padding: 12px;
+  border-radius: 25px;
+  background: #25d366;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+}
