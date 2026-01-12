@@ -1,43 +1,307 @@
-body { margin:0; font-family: "Segoe UI", sans-serif; background:#0b141a; color:#e9edef; }
-body.light { background:#f0f2f5; color:#000; }
+/* ===== RESET ===== */
+* {
+  box-sizing: border-box;
+}
 
-.app { display:flex; flex-direction:column; height:100dvh; }
+body {
+  margin: 0;
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  background: #0b141a;
+  color: #e9edef;
+  height: 100dvh;
+  overflow: hidden;
+}
 
-header { display:flex; justify-content:space-between; padding:10px 15px; background:#111b21; color:white; box-shadow:0 2px 5px rgba(0,0,0,0.2);}
-body.light header{background:#fff;color:#000;}
-header .left {display:flex; align-items:center; gap:10px;}
-header .left img {width:50px; height:50px; border-radius:50%; object-fit:cover;}
-header .left div small {font-size:12px; color:#25d366;}
-header .right button {margin-left:10px; padding:8px 12px; border:none; border-radius:50%; background:#25d366; color:#fff; cursor:pointer;}
+body.light {
+  background: #f0f2f5;
+  color: #000;
+}
 
-.chatContainer { flex:1; overflow-y:auto; padding:10px; display:flex; flex-direction:column; gap:8px; scroll-behavior:smooth; }
-.me, .other { display:flex; align-items:flex-end; gap:10px; }
-.me { justify-content:flex-end; }
-.other { justify-content:flex-start; }
-.me div, .other div { padding:8px 12px; border-radius:18px; max-width:70%; word-wrap:break-word; font-size:14px; position:relative; }
-.me div { background:#25d366; color:#000; border-bottom-right-radius:4px; }
-.other div { background:#2a3942; color:#fff; border-bottom-left-radius:4px; }
-body.light .me div { background:#dcf8c6; color:#000; }
-body.light .other div { background:#fff; color:#000; }
+/* ===== APP LAYOUT ===== */
+.app {
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
 
-.inputBox { display:flex; padding:10px; background:#111b21; }
-body.light .inputBox { background:#fff; }
-.inputBox input { flex:1; padding:12px 15px; border-radius:50px; border:none; outline:none; font-size:14px; background:#1f2c34; color:#fff; }
-body.light .inputBox input { background:#f0f2f5; color:#000; }
-.inputBox button { margin-left:8px; padding:12px 16px; border:none; border-radius:50%; background:#25d366; color:#fff; cursor:pointer; font-size:16px; }
+/* ===== HEADER ===== */
+header {
+  height: 64px;
+  padding: 0 14px;
+  background: #111b21;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  z-index: 10;
+}
 
-.floatingBar { position:fixed; bottom:80px; right:20px; display:flex; flex-direction:column; gap:10px; }
-.floatingBar button { width:50px; height:50px; border-radius:50%; border:none; background:#25d366; color:#fff; font-size:20px; cursor:pointer; box-shadow:0 4px 8px rgba(0,0,0,0.3); }
+body.light header {
+  background: #ffffff;
+}
 
-.modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); justify-content:center; align-items:center; }
-.modalBox { background:#111b21; padding:20px; border-radius:12px; color:#fff; max-width:300px; width:80%; text-align:center; position:relative; }
-body.light .modalBox { background:#fff; color:#000; }
-.modalBox span { position:absolute; top:10px; right:15px; cursor:pointer; font-size:18px; }
+header .left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 
-.loginBody { display:flex; justify-content:center; align-items:center; height:100dvh; background:#0b141a; }
-.loginBox { background:#111b21; padding:30px 25px; border-radius:15px; text-align:center; width:320px; box-shadow:0 8px 20px rgba(0,0,0,0.3); }
-body.light .loginBox { background:#fff; color:#000; }
-.loginBox h2 { margin-bottom:15px; }
-.loginBox input[type="text"], .loginBox input[type="file"] { width:100%; padding:10px 12px; margin-bottom:12px; border-radius:25px; border:none; outline:none; font-size:14px; }
-.loginBox button { width:100%; padding:12px; border:none; border-radius:25px; background:#25d366; color:#fff; font-size:16px; cursor:pointer; }
-.loginAvatar { width:80px; height:80px; border-radius:50%; object-fit:cover; margin-bottom:10px; }
+header .left img {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+#usernameDisplay {
+  font-weight: 600;
+}
+
+#status {
+  font-size: 12px;
+  color: #25d366;
+}
+
+header .right button {
+  border: none;
+  background: #25d366;
+  color: #fff;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 16px;
+  margin-left: 8px;
+  cursor: pointer;
+}
+
+/* ===== CHAT AREA ===== */
+.chatContainer {
+  flex: 1;
+  padding: 12px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: url("https://i.imgur.com/7b1q8Zd.png");
+  background-size: cover;
+}
+
+body.light .chatContainer {
+  background: #e5ddd5;
+}
+
+/* ===== MESSAGE ROW ===== */
+.me,
+.other {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  max-width: 100%;
+}
+
+.me {
+  justify-content: flex-end;
+}
+
+.other {
+  justify-content: flex-start;
+}
+
+/* ===== AVATAR ===== */
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+/* ===== MESSAGE BUBBLE ===== */
+.bubble {
+  max-width: 72%;
+  padding: 8px 12px;
+  border-radius: 16px;
+  font-size: 14px;
+  line-height: 1.4;
+  display: flex;
+  flex-direction: column;
+  word-wrap: break-word;
+}
+
+/* My messages */
+.me .bubble {
+  background: #25d366;
+  color: #000;
+  border-bottom-right-radius: 4px;
+}
+
+/* Others */
+.other .bubble {
+  background: #2a3942;
+  color: #fff;
+  border-bottom-left-radius: 4px;
+}
+
+body.light .me .bubble {
+  background: #dcf8c6;
+}
+
+body.light .other .bubble {
+  background: #ffffff;
+  color: #000;
+}
+
+/* ===== TIMESTAMP ===== */
+.time {
+  font-size: 10px;
+  opacity: 0.6;
+  margin-top: 4px;
+  align-self: flex-end;
+}
+
+/* ===== INPUT BAR ===== */
+.inputBox {
+  min-height: 64px;
+  padding: 10px;
+  display: flex;
+  gap: 8px;
+  background: #111b21;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+body.light .inputBox {
+  background: #ffffff;
+}
+
+.inputBox input {
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: 25px;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  background: #1f2c34;
+  color: #fff;
+}
+
+body.light .inputBox input {
+  background: #f0f2f5;
+  color: #000;
+}
+
+.inputBox button {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: none;
+  background: #25d366;
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+/* ===== FLOATING ACTION BAR ===== */
+.floatingBar {
+  position: fixed;
+  bottom: 80px;
+  right: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.floatingBar button {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: none;
+  background: #25d366;
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.35);
+}
+
+/* ===== MODAL (ABOUT) ===== */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.65);
+  justify-content: center;
+  align-items: center;
+  z-index: 99;
+}
+
+.modalBox {
+  background: #111b21;
+  padding: 20px;
+  border-radius: 14px;
+  width: 85%;
+  max-width: 320px;
+  text-align: center;
+  position: relative;
+}
+
+body.light .modalBox {
+  background: #ffffff;
+  color: #000;
+}
+
+.modalBox span {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+/* ===== LOGIN PAGE ===== */
+.loginBody {
+  height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #0b141a, #111b21);
+}
+
+.loginBox {
+  width: 320px;
+  padding: 26px;
+  border-radius: 18px;
+  background: #111b21;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+  text-align: center;
+}
+
+.loginBox h2 {
+  margin-bottom: 14px;
+}
+
+.loginAvatar {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 12px;
+}
+
+.loginBox input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 25px;
+  border: none;
+  outline: none;
+  margin-bottom: 12px;
+}
+
+.loginBox button {
+  width: 100%;
+  padding: 12px;
+  border-radius: 25px;
+  border: none;
+  background: #25d366;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+}
