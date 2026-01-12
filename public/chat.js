@@ -71,6 +71,11 @@ function sendMessage() {
 
 // Receive messages
 socket.on("chat message", (data) => {
+  // Prevent duplicate self-message
+  if (data.username === localStorage.getItem("user")) return;
+
+  renderMessage(data, false);
+});
   const wrapper = document.createElement("div");
   wrapper.className = data.username === localStorage.getItem("user") ? "me" : "other";
 
