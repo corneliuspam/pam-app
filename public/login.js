@@ -9,9 +9,9 @@ function login() {
 
   const reader = new FileReader();
   reader.onload = () => {
-    localStorage.setItem("user", username);
-    localStorage.setItem("photo", reader.result);
-    window.location.href = "/dashboard";
+    localStorage.setItem("user", username);       // store username
+    localStorage.setItem("photo", reader.result); // store image as Base64
+    window.location.href = "/dashboard";          // go to dashboard
   };
   reader.readAsDataURL(photo);
 }
