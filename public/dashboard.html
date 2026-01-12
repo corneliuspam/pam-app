@@ -57,6 +57,18 @@
     <h2 id="profileName"></h2>
     <p id="profileStatus"></p>
   </div>
+  
+</div>
+  <p id="profileBio" class="profileBio"></p>
+
+<button id="editBioBtn" class="editBioBtn">
+  Edit Bio
+</button>
+
+<div id="bioEditor" style="display:none;">
+  <textarea id="bioInput" maxlength="120"
+    placeholder="Write something about yourself..."></textarea>
+  <button id="saveBioBtn">Save</button>
 </div>
   
 <script src="/socket.io/socket.io.js"></script>
