@@ -1,68 +1,61 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>PAM CHAT</title>
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PAM Chat</title>
   <link rel="stylesheet" href="style.css">
 </head>
-  <body>
-  <div class="app">
 
-    <header>
-      <!-- header content -->
-    </header>
+<body>
 
-    <div id="chat" class="chatContainer"></div>
+<div class="app">
 
-    <div class="inputBox">
-      <input id="msg" placeholder="Type a message">
-      <button id="sendBtn">➤</button>
+  <!-- HEADER -->
+  <header>
+    <div class="left">
+      <img id="userPic" class="profileIcon" src="">
+      <div>
+        <div id="usernameDisplay"></div>
+        <small id="status">● Offline</small>
+      </div>
     </div>
 
-    <div class="floatingBar">
-      <button>👤</button>
-      <button>➕</button>
-      <button>⚙️</button>
+    <div class="right">
+      <button id="aboutBtn">ℹ️</button>
     </div>
+  </header>
 
+  <!-- CHAT -->
+  <div id="chat" class="chatContainer"></div>
+
+  <!-- MESSAGE BAR -->
+  <div class="inputBox">
+    <input id="msg" placeholder="Type a message">
+    <button id="sendBtn">➤</button>
   </div>
 
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="chat.js"></script>
-</body>
-<header>
-  <div class="left">
-    <img id="userPic" src="" alt="Profile" class="profileIcon">
-    <div>
-      <span id="usernameDisplay"></span>
-      <small id="status">● Offline</small>
-    </div>
-  </div>
-  <div class="right">
-    <button id="darkBtn">🌙</button>
-    <button id="aboutBtn">ℹ️</button>
-  </div>
-</header>
-
-<div id="chat" class="chatContainer"></div>
-<div class="inputBox">
-  <input id="msg" placeholder="Type a message">
-  <button id="sendBtn">➤</button>
 </div>
 
+<!-- FLOATING BUTTONS -->
+<div class="floatingBar">
+  <button>👤</button>
+  <button>➕</button>
+  <button>⚙️</button>
+</div>
+
+<!-- ABOUT MODAL -->
 <div id="aboutModal" class="modal">
   <div class="modalBox">
     <span id="closeAbout">✖</span>
     <h3>About PAM App</h3>
-    <p><b>Creator:</b> Cornelius Pam Cyprian</p>
-    <p>Stylish public group chat with profile pictures.</p>
+    <p>Created by Cornelius Pam Cyprian</p>
+    <p>Public chat web app inspired by WhatsApp & Messenger.</p>
   </div>
 </div>
 
 <script src="/socket.io/socket.io.js"></script>
 <script src="chat.js"></script>
-<div class="app">
-  
-</div>
+
 </body>
 </html>
