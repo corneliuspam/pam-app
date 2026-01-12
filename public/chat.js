@@ -12,6 +12,13 @@ window.onload = () => {
 
   document.getElementById("usernameDisplay").textContent = username;
   if (photo) document.getElementById("userPic").src = photo;
+
+  // Set status online
+  document.getElementById("status").textContent = "● Online";
+  document.getElementById("status").style.color = "#25d366";
+
+  // Notify server user is online
+  socket.emit("user connected", username);
 };
 
 // ===== ABOUT MODAL =====
@@ -44,10 +51,20 @@ sendBtn.addEventListener("click", () => {
   const username = localStorage.getItem("user");
   const photo = localStorage.getItem("photo");
 
-  // Emit to server
-  socket.emit("chat message", { username, photo, message: msg, time: new Date().toLocaleTimeString() });
+  // Emit message to server
+  socket.emit("chat message", {
+    username,
+    photo,
+    message: msg,
+    time: new Date().toLocaleTimeString()
+  });
 
   msgInput.value = "";
+});
+
+// Press Enter to send
+msgInput.addEventListener("keyup", (e) => {
+  if (e.key === "Enter") sendBtn.click();
 });
 
 // ===== RECEIVE MESSAGE =====
@@ -67,5 +84,7 @@ socket.on("chat message", (data) => {
   chatContainer.scrollTop = chatContainer.scrollHeight;
 });
 
-// ===== STATUS ONLINE =====
-socket.emit("user connected", localStorage.getItem("user"));
+// ===== STATUS ONLINE/OFFLINE =====
+window.addEventListener("beforeunload", () => {
+  socket.emit("user disconnected", localStorage.getItem("user"));
+});
