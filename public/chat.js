@@ -34,12 +34,16 @@ function renderMessage(data, isMe) {
   wrapper.className = isMe ? "me" : "other";
 
   wrapper.innerHTML = `
-    <img class="avatar" src="${photo}" />
+    <img class="avatar" src="${data.photo}" data-status="Online"/>
     <div class="bubble">
-      <span>${data.message}</span>
+      <span data-username="${data.username}">${data.message}</span>
       <small class="time">${data.time}</small>
     </div>
   `;
+
+  chatContainer.appendChild(wrapper);
+  chatContainer.scrollTop = chatContainer.scrollHeight;
+}
 
   chatContainer.appendChild(wrapper);
   chatContainer.scrollTop = chatContainer.scrollHeight;
