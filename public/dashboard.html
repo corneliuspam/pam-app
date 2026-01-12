@@ -5,12 +5,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
-<div class="floatingBar">
-  <button title="Profile">👤</button>
-  <button title="Add Friend">➕</button>
-  <button title="Settings">⚙️</button>
-</div>
+  <body>
+  <div class="app">
+
+    <header>
+      <!-- header content -->
+    </header>
+
+    <div id="chat" class="chatContainer"></div>
+
+    <div class="inputBox">
+      <input id="msg" placeholder="Type a message">
+      <button id="sendBtn">➤</button>
+    </div>
+
+    <div class="floatingBar">
+      <button>👤</button>
+      <button>➕</button>
+      <button>⚙️</button>
+    </div>
+
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="chat.js"></script>
+</body>
 <header>
   <div class="left">
     <img id="userPic" src="" alt="Profile" class="profileIcon">
