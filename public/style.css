@@ -1,35 +1,36 @@
-/* ================= GLOBAL ================= */
-* {
+/* ===== BODY & APP LAYOUT ===== */
+body {
   margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont;
-}
-
-html, body {
-  height: 100%;
-}
-
-/* ================= APP WRAPPER ================= */
-.app {
-  height: 100dvh; /* Android-safe viewport */
-  display: flex;
-  flex-direction: column;
+  font-family: "Segoe UI", sans-serif;
   background: #0b141a;
   color: #e9edef;
 }
 
-/* ================= HEADER ================= */
-header {
-  height: 60px;
-  flex-shrink: 0;
-  background: #202c33;
+body.light {
+  background: #f0f2f5;
+  color: #000;
+}
+
+.app {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  height: 100dvh; /* Android-safe viewport */
+}
+
+/* ===== HEADER ===== */
+header {
+  display: flex;
   justify-content: space-between;
-  padding: 0 12px;
-  border-bottom: 1px solid #2a3942;
-  z-index: 2;
+  align-items: center;
+  padding: 10px 15px;
+  background: #111b21;
+  color: #fff;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+body.light header {
+  background: #fff;
+  color: #000;
 }
 
 header .left {
@@ -38,217 +39,237 @@ header .left {
   gap: 10px;
 }
 
-.profileIcon {
-  width: 42px;
-  height: 42px;
+header .left img {
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid #25d366;
 }
 
-#usernameDisplay {
-  font-weight: bold;
-}
-
-#status {
+header .left div small {
   font-size: 12px;
   color: #25d366;
 }
 
 header .right button {
-  background: none;
+  margin-left: 10px;
+  padding: 8px 12px;
   border: none;
-  color: #e9edef;
-  font-size: 20px;
+  border-radius: 50%;
+  background: #25d366;
+  color: #fff;
   cursor: pointer;
+  font-size: 16px;
 }
 
-/* ================= CHAT AREA ================= */
+/* ===== CHAT CONTAINER ===== */
 .chatContainer {
   flex: 1;
-  padding: 15px;
   overflow-y: auto;
-  background: #0b141a;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  scroll-behavior: smooth;
 }
 
-.chatContainer::-webkit-scrollbar {
-  display: none;
-}
-
+/* ===== CHAT BUBBLES ===== */
 .me, .other {
   display: flex;
-  margin-bottom: 12px;
-  max-width: 80%;
+  align-items: flex-end;
+  gap: 10px;
 }
 
 .me {
-  margin-left: auto;
-  flex-direction: row-reverse;
+  justify-content: flex-end;
+}
+
+.other {
+  justify-content: flex-start;
+}
+
+.me div, .other div {
+  padding: 8px 12px;
+  border-radius: 18px;
+  max-width: 70%;
+  word-wrap: break-word;
+  position: relative;
+  font-size: 14px;
 }
 
 .me div {
-  background: #005c4b;
+  background: #25d366;
+  color: #000;
+  border-bottom-right-radius: 4px;
 }
 
 .other div {
-  background: #202c33;
+  background: #2a3942;
+  color: #fff;
+  border-bottom-left-radius: 4px;
 }
 
-.me div,
-.other div {
-  padding: 10px 14px;
-  border-radius: 16px;
-  font-size: 14px;
-  line-height: 1.4;
+body.light .me div {
+  background: #dcf8c6;
+  color: #000;
 }
 
-.me img,
-.other img {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  margin: 0 8px;
+body.light .other div {
+  background: #fff;
+  color: #000;
 }
 
-.me small,
-.other small {
-  display: block;
-  font-size: 10px;
-  color: #8696a0;
-  text-align: right;
-  margin-top: 4px;
-}
-
-/* ================= MESSAGE BAR ================= */
+/* ===== MESSAGE BAR ===== */
 .inputBox {
-  height: 64px;
-  flex-shrink: 0;
-  background: #202c33;
   display: flex;
-  align-items: center;
   padding: 10px;
-  gap: 10px;
-  border-top: 1px solid #2a3942;
-  z-index: 2;
+  background: #111b21;
+}
+
+body.light .inputBox {
+  background: #fff;
 }
 
 .inputBox input {
   flex: 1;
-  padding: 12px;
-  border-radius: 25px;
+  padding: 12px 15px;
+  border-radius: 50px;
   border: none;
-  background: #2a3942;
-  color: #fff;
   outline: none;
+  font-size: 14px;
+  background: #1f2c34;
+  color: #fff;
+}
+
+body.light .inputBox input {
+  background: #f0f2f5;
+  color: #000;
 }
 
 .inputBox button {
-  width: 44px;
-  height: 44px;
+  margin-left: 8px;
+  padding: 12px 16px;
+  border: none;
   border-radius: 50%;
   background: #25d366;
-  border: none;
-  font-size: 18px;
+  color: #fff;
   cursor: pointer;
+  font-size: 16px;
 }
 
-/* ================= FLOATING BAR ================= */
+/* ===== FLOATING ICONS ===== */
 .floatingBar {
   position: fixed;
-  bottom: 150px;
-  right: 15px;
+  bottom: 80px;
+  right: 20px;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  z-index: 5;
 }
 
 .floatingBar button {
-  width: 45px;
-  height: 45px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
-  background: #25d366;
   border: none;
-  font-size: 18px;
+  background: #25d366;
+  color: #fff;
+  font-size: 20px;
   cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
 }
 
-/* ================= MODAL ================= */
+/* ===== ABOUT MODAL ===== */
 .modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.7);
   display: none;
+  position: fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background: rgba(0,0,0,0.6);
   justify-content: center;
   align-items: center;
-  z-index: 10;
 }
 
 .modalBox {
   background: #111b21;
   padding: 20px;
-  border-radius: 16px;
-  width: 85%;
-  max-width: 350px;
+  border-radius: 12px;
+  color: #fff;
+  max-width: 300px;
+  width: 80%;
+  text-align: center;
+  position: relative;
+}
+
+body.light .modalBox {
+  background: #fff;
+  color: #000;
 }
 
 .modalBox span {
-  float: right;
+  position: absolute;
+  top: 10px;
+  right: 15px;
   cursor: pointer;
-  color: #25d366;
+  font-size: 18px;
 }
 
 /* ===== LOGIN PAGE ===== */
 .loginBody {
-  background: linear-gradient(135deg, #0b141a, #1f2c33);
-  height: 100dvh;
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 100dvh;
+  background: #0b141a;
 }
 
 .loginBox {
   background: #111b21;
-  padding: 25px;
-  width: 90%;
-  max-width: 320px;
-  border-radius: 16px;
+  padding: 30px 25px;
+  border-radius: 15px;
   text-align: center;
+  width: 320px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+body.light .loginBox {
+  background: #fff;
+  color: #000;
 }
 
 .loginBox h2 {
   margin-bottom: 15px;
 }
 
-.loginAvatar {
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
-  object-fit: cover;
-  background: #2a3942;
-  margin-bottom: 10px;
-}
-
-.loginBox input {
+.loginBox input[type="text"], .loginBox input[type="file"] {
   width: 100%;
-  padding: 12px;
-  margin-top: 10px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
   border-radius: 25px;
   border: none;
   outline: none;
-  background: #2a3942;
-  color: white;
+  font-size: 14px;
 }
 
 .loginBox button {
-  margin-top: 15px;
   width: 100%;
   padding: 12px;
+  border: none;
   border-radius: 25px;
   background: #25d366;
-  border: none;
+  color: #fff;
   font-size: 16px;
   cursor: pointer;
+}
+
+.loginAvatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
 }
 
 /* ===== DARK MODE ===== (default) ===== */
