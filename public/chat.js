@@ -41,7 +41,23 @@ msgInput.addEventListener("keyup", e => { if(e.key==="Enter") sendMessage(); });
 
 function sendMessage() {
   const msg = msgInput.value.trim();
-  if(!msg) return;
+  if (!msg) return;
+
+  const data = {
+    username: localStorage.getItem("user"),
+    photo: localStorage.getItem("photo"),
+    message: msg,
+    time: new Date().toLocaleTimeString()
+  };
+
+  // ✅ SHOW MESSAGE INSTANTLY (no delay)
+  renderMessage(data, true);
+
+  // Send to server
+  socket.emit("chat message", data);
+
+  msgInput.value = "";
+}
 
   const username = localStorage.getItem("user");
   const photo = localStorage.getItem("photo");
@@ -69,3 +85,19 @@ socket.on("chat message", (data) => {
   chatContainer.appendChild(wrapper);
   chatContainer.scrollTop = chatContainer.scrollHeight;
 });
+
+function renderMessage(data, isMe = false) {
+  const wrapper = document.createElement("div");
+  wrapper.className = isMe ? "me" : "other";
+
+  wrapper.innerHTML = `
+    <img class="avatar" src="${localStorage.getItem("photo")}" />
+    <div class="bubble">
+      <span>${data.message}</span>
+      <small class="time">${data.time}</small>
+    </div>
+  `;
+
+  chatContainer.appendChild(wrapper);
+  chatContainer.scrollTop = chatContainer.scrollHeight;
+}
