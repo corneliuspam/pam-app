@@ -99,38 +99,37 @@ window.onclick = (e) => {
   if (e.target === aboutModal) aboutModal.style.display = "none";
 };
 
-// Profile modal elements
-const profileModal = document.getElementById("profileModal");
-const profileName = document.getElementById("profileName");
-const profilePicLarge = document.getElementById("profilePicLarge");
-const profileStatus = document.getElementById("profileStatus");
-const closeProfile = document.getElementById("closeProfile");
+// ===== PROFILE MODAL =====
+(function() {
+  const profileModal = document.getElementById("profileModal");
+  const profileName = document.getElementById("profileName");
+  const profilePicLarge = document.getElementById("profilePicLarge");
+  const profileStatus = document.getElementById("profileStatus");
+  const closeProfile = document.getElementById("closeProfile");
 
-// Close modal logic (already there)
-closeProfile.addEventListener("click", () => {
-  profileModal.style.display = "none";
-});
-window.addEventListener("click", (e) => {
-  if (e.target === profileModal) profileModal.style.display = "none";
-});
+  // Close modal safely
+  closeProfile.addEventListener("click", () => profileModal.style.display = "none");
+  window.addEventListener("click", e => {
+    if (e.target === profileModal) profileModal.style.display = "none";
+  });
 
-// ===== NEW: Click avatar to open profile =====
-chatContainer.addEventListener("click", (e) => {
-  const avatar = e.target.closest(".avatar"); // any avatar clicked
-  if (!avatar) return;
+  // Safe click listener for avatars
+  chatContainer.addEventListener("click", (e) => {
+    const avatar = e.target.closest(".avatar");
+    if (!avatar) return; // ignore other clicks
 
-  const parent = avatar.closest(".me, .other");
-  if (!parent) return;
+    const bubble = avatar.closest(".me, .other")?.querySelector(".bubble span");
+    if (!bubble) return;
 
-  // Extract username & status from bubble
-  const usernameElem = parent.querySelector(".bubble span")?.dataset?.username || parent.querySelector(".bubble span").textContent;
-  const status = avatar.dataset.status || "Online"; // fallback to online
-  const photoSrc = avatar.src;
+    const username = bubble.dataset.username || bubble.textContent;
+    const photoSrc = avatar.src;
+    const status = avatar.dataset.status || "Online";
 
-  // Set modal info
-  profilePicLarge.src = photoSrc;
-  profileName.textContent = usernameElem;
-  profileStatus.textContent = status;
+    // Populate modal
+    profilePicLarge.src = photoSrc;
+    profileName.textContent = username;
+    profileStatus.textContent = status;
 
-  profileModal.style.display = "flex";
-});
+    profileModal.style.display = "flex";
+  });
+})();
