@@ -70,3 +70,17 @@ if (aboutBtn && aboutModal && closeAbout) {
     }
   };
 }
+
+// ===== LOAD USER INFO =====
+window.onload = () => {
+  const username = localStorage.getItem("user");
+  const photo = localStorage.getItem("photo");
+
+  if (username) {
+    document.getElementById("usernameDisplay").textContent = username;
+  }
+
+  if (photo) {
+    document.getElementById("userPic").src = photo;
+  }
+};
