@@ -49,6 +49,10 @@ function renderMessage(data, isMe) {
   chatContainer.scrollTop = chatContainer.scrollHeight;
 }
 
+  chatContainer.appendChild(wrapper);
+  chatContainer.scrollTop = chatContainer.scrollHeight;
+}
+
 // ===== SEND MESSAGE =====
 function sendMessage() {
   const text = msgInput.value.trim();
