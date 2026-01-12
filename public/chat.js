@@ -41,17 +41,27 @@ socket.on("online", users => {
   status.textContent = users.includes(user.username) ? "● Online" : "● Offline";
 });
 
-// DARK MODE
-const darkBtn = document.getElementById("darkBtn");
-darkBtn.addEventListener("click",()=>{
-  document.body.classList.toggle("dark");
-  localStorage.setItem("dark", document.body.classList.contains("dark"));
-});
-if(localStorage.getItem("dark")==="true") document.body.classList.add("dark");
+// DARK MODE TOGGLE
+const toggle = document.getElementById("themeToggle");
 
-// ABOUT
+toggle.onclick = () => {
+  document.body.classList.toggle("light");
+  toggle.textContent = document.body.classList.contains("light") ? "☀️" : "🌙";
+};
+
+// ABOUT MODAL
 const aboutBtn = document.getElementById("aboutBtn");
 const aboutModal = document.getElementById("aboutModal");
 const closeAbout = document.getElementById("closeAbout");
-aboutBtn.addEventListener("click",()=>aboutModal.style.display="flex");
-closeAbout.addEventListener("click",()=>aboutModal.style.display="none");
+
+if (aboutBtn) {
+  aboutBtn.onclick = () => {
+    aboutModal.style.display = "flex";
+  };
+}
+
+if (closeAbout) {
+  closeAbout.onclick = () => {
+    aboutModal.style.display = "none";
+  };
+}
