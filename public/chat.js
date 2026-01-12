@@ -95,25 +95,38 @@ window.onclick = (e) => {
   if (e.target === aboutModal) aboutModal.style.display = "none";
 };
 
-// Profile Modal Elements
+// Profile modal elements
 const profileModal = document.getElementById("profileModal");
 const profileName = document.getElementById("profileName");
 const profilePicLarge = document.getElementById("profilePicLarge");
 const profileStatus = document.getElementById("profileStatus");
 const closeProfile = document.getElementById("closeProfile");
 
-// Open modal when clicking avatar
-document.getElementById("userPic").addEventListener("click", () => {
-  profilePicLarge.src = localStorage.getItem("photo");
-  profileName.textContent = localStorage.getItem("user");
-  profileStatus.textContent = "Online"; // you can use your online/offline logic here
-  profileModal.style.display = "flex";
-});
-
-// Close modal
+// Close modal logic (already there)
 closeProfile.addEventListener("click", () => {
   profileModal.style.display = "none";
 });
 window.addEventListener("click", (e) => {
   if (e.target === profileModal) profileModal.style.display = "none";
+});
+
+// ===== NEW: Click avatar to open profile =====
+chatContainer.addEventListener("click", (e) => {
+  const avatar = e.target.closest(".avatar"); // any avatar clicked
+  if (!avatar) return;
+
+  const parent = avatar.closest(".me, .other");
+  if (!parent) return;
+
+  // Extract username & status from bubble
+  const usernameElem = parent.querySelector(".bubble span")?.dataset?.username || parent.querySelector(".bubble span").textContent;
+  const status = avatar.dataset.status || "Online"; // fallback to online
+  const photoSrc = avatar.src;
+
+  // Set modal info
+  profilePicLarge.src = photoSrc;
+  profileName.textContent = usernameElem;
+  profileStatus.textContent = status;
+
+  profileModal.style.display = "flex";
 });
