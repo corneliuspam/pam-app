@@ -49,19 +49,24 @@ toggle.onclick = () => {
   toggle.textContent = document.body.classList.contains("light") ? "☀️" : "🌙";
 };
 
-// ABOUT MODAL
+// ===== ABOUT MODAL =====
 const aboutBtn = document.getElementById("aboutBtn");
 const aboutModal = document.getElementById("aboutModal");
 const closeAbout = document.getElementById("closeAbout");
 
-if (aboutBtn) {
+if (aboutBtn && aboutModal && closeAbout) {
   aboutBtn.onclick = () => {
-    aboutModal.style.display = "flex";
+    aboutModal.style.display = "flex"; // show modal
   };
-}
 
-if (closeAbout) {
   closeAbout.onclick = () => {
-    aboutModal.style.display = "none";
+    aboutModal.style.display = "none"; // hide modal
+  };
+
+  // Optional: click outside modal to close
+  window.onclick = (e) => {
+    if (e.target === aboutModal) {
+      aboutModal.style.display = "none";
+    }
   };
 }
