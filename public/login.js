@@ -2,10 +2,7 @@ function login() {
   const username = document.getElementById("username").value;
   const photo = document.getElementById("photo").files[0];
 
-  if (!username || !photo) {
-    alert("Enter name and upload picture");
-    return;
-  }
+  if (!username || !photo) return alert("Enter username and upload a photo");
 
   const reader = new FileReader();
   reader.onload = () => {
