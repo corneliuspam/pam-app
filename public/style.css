@@ -250,3 +250,42 @@ header .right button {
   font-size: 16px;
   cursor: pointer;
 }
+
+/* ===== DARK MODE ===== (default) ===== */
+body {
+  background: #0b141a;
+  color: #e9edef;
+}
+
+body.light .app {
+  background: #f0f2f5;
+  color: #000;
+}
+
+body.light header {
+  background: #fff;
+  border-bottom: 1px solid #ddd;
+}
+
+body.light .chatContainer {
+  background: #e5ddd5;
+}
+
+body.light .me div {
+  background: #dcf8c6;
+  color: #000;
+}
+
+body.light .other div {
+  background: #fff;
+  color: #000;
+}
+
+body.light .inputBox {
+  background: #fff;
+}
+
+body.light .inputBox input {
+  background: #f0f2f5;
+  color: #000;
+}
