@@ -2,6 +2,13 @@ html, body {
   height: 100%;
 }
 
+.app {
+  height: 100dvh; /* Android-safe viewport */
+  display: flex;
+  flex-direction: column;
+  background: #0b141a;
+}
+
 /* ================= RESET ================= */
 * {
   margin: 0;
