@@ -10,6 +10,8 @@ body {
   color: #e9edef;
   height: 100vh;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 /* ================= LOGIN ================= */
@@ -123,7 +125,7 @@ header .right button {
   height: calc(100vh - 120px);
   padding: 15px;
   overflow-y: auto;
-  background: url("https://i.imgur.com/9XQZ6wL.png");
+  background: #0b141a;
 }
 
 .chatContainer::-webkit-scrollbar {
@@ -174,12 +176,14 @@ header .right button {
 /* ================= INPUT ================= */
 
 .inputBox {
+  flex-shrink: 0;
   height: 60px;
   background: #202c33;
   display: flex;
   align-items: center;
   padding: 10px;
   gap: 10px;
+  border-top: 1px solid #2a3942;
 }
 
 .inputBox input {
@@ -207,7 +211,7 @@ header .right button {
 
 .floatingBar {
   position: fixed;
-  bottom: 80px;
+  bottom: 140px;
   right: 15px;
   display: flex;
   flex-direction: column;
