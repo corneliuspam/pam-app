@@ -1,4 +1,6 @@
-const socket = io();
+const socket = io({
+  transports: ["websocket"]
+});
 
 // Load user info
 window.onload = () => {
@@ -57,7 +59,7 @@ socket.on("chat message", (data) => {
   wrapper.className = data.username === localStorage.getItem("user") ? "me" : "other";
 
   wrapper.innerHTML = `
-    <img class="avatar" src="${data.photo}" />
+    <img class="avatar" src="${localStorage.getItem("photo")}" />
     <div class="bubble">
       <span class="msgText">${data.message}</span>
       <small class="time">${data.time}</small>
