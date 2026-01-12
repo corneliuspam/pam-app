@@ -6,18 +6,16 @@ window.onload = () => {
   const photo = localStorage.getItem("photo");
 
   if (!username) {
-    window.location.href = "/"; // redirect if not logged in
+    window.location.href = "/";
     return;
   }
 
   document.getElementById("usernameDisplay").textContent = username;
   if (photo) document.getElementById("userPic").src = photo;
 
-  // Set status online
   document.getElementById("status").textContent = "● Online";
   document.getElementById("status").style.color = "#25d366";
 
-  // Notify server user is online
   socket.emit("user connected", username);
 };
 
@@ -39,7 +37,7 @@ themeToggle.onclick = () => {
   themeToggle.textContent = document.body.classList.contains("light") ? "☀️" : "🌙";
 };
 
-// ===== SEND MESSAGE =====
+// ===== CHAT =====
 const chatContainer = document.getElementById("chat");
 const msgInput = document.getElementById("msg");
 const sendBtn = document.getElementById("sendBtn");
@@ -51,7 +49,6 @@ sendBtn.addEventListener("click", () => {
   const username = localStorage.getItem("user");
   const photo = localStorage.getItem("photo");
 
-  // Emit message to server
   socket.emit("chat message", {
     username,
     photo,
@@ -62,15 +59,8 @@ sendBtn.addEventListener("click", () => {
   msgInput.value = "";
 });
 
-sendBtn.addEventListener("click", () => {
-  const msg = msgInput.value.trim();
-  if (!msg) return;
-
-  const username = localStorage.getItem("user");
-  const photo = localStorage.getItem("photo");
-
-  socket.emit("chat message", { username, photo, message: msg, time: new Date().toLocaleTimeString() });
-  msgInput.value = "";
+msgInput.addEventListener("keyup", (e) => {
+  if (e.key === "Enter") sendBtn.click();
 });
 
 socket.on("chat message", (data) => {
@@ -87,9 +77,4 @@ socket.on("chat message", (data) => {
 
   chatContainer.appendChild(div);
   chatContainer.scrollTop = chatContainer.scrollHeight;
-});
-
-// ===== STATUS ONLINE/OFFLINE =====
-window.addEventListener("beforeunload", () => {
-  socket.emit("user disconnected", localStorage.getItem("user"));
 });
