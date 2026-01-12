@@ -48,7 +48,17 @@
     <p>Public chat web app inspired by WhatsApp & Messenger.</p>
   </div>
 </div>
-
+  
+<!-- Profile Modal -->
+<div id="profileModal" class="modal">
+  <div class="modalContent">
+    <span id="closeProfile" class="closeBtn">&times;</span>
+    <img id="profilePicLarge" src="" alt="Profile Picture" class="largeAvatar">
+    <h2 id="profileName"></h2>
+    <p id="profileStatus"></p>
+  </div>
+</div>
+  
 <script src="/socket.io/socket.io.js"></script>
 <script src="chat.js"></script>
 </body>
