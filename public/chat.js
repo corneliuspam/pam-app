@@ -117,3 +117,30 @@ closeProfile.addEventListener("click", () => {
 window.addEventListener("click", (e) => {
   if (e.target === profileModal) profileModal.style.display = "none";
 });
+
+// ===== PROFILE BIO (SAFE FEATURE) =====
+(function () {
+  const bioText = document.getElementById("profileBio");
+  const editBtn = document.getElementById("editBioBtn");
+  const bioEditor = document.getElementById("bioEditor");
+  const bioInput = document.getElementById("bioInput");
+  const saveBio = document.getElementById("saveBioBtn");
+
+  if (!bioText || !editBtn) return; // safety guard
+
+  // Load bio
+  const savedBio = localStorage.getItem("profileBio") || "Hey there! I am using PAM App.";
+  bioText.textContent = savedBio;
+
+  editBtn.onclick = () => {
+    bioEditor.style.display = "block";
+    bioInput.value = bioText.textContent;
+  };
+
+  saveBio.onclick = () => {
+    const bio = bioInput.value.trim() || "Hey there! I am using PAM App.";
+    localStorage.setItem("profileBio", bio);
+    bioText.textContent = bio;
+    bioEditor.style.display = "none";
+  };
+})();
