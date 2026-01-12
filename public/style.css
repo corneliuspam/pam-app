@@ -22,6 +22,7 @@ body.light {
   height: 100dvh;
   display: flex;
   flex-direction: column;
+  overflow: hidden; /* 🔑 CRITICAL */
 }
 
 /* ===== HEADER ===== */
@@ -76,6 +77,13 @@ header .right button {
 
 /* ===== CHAT AREA ===== */
 .chatContainer {
+  flex: 1;
+  min-height: 0; /* 🔑 VERY IMPORTANT */
+  padding: 12px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   background: linear-gradient(
     180deg,
     #0b141a 0%,
@@ -159,7 +167,8 @@ body.light .other .bubble {
 
 /* ===== INPUT BAR ===== */
 .inputBox {
-  min-height: 64px;
+  height: 64px;
+  flex-shrink: 0; /* 🔑 Prevent shrinking */
   padding: 10px;
   display: flex;
   gap: 8px;
