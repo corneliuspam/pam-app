@@ -76,14 +76,12 @@ header .right button {
 
 /* ===== CHAT AREA ===== */
 .chatContainer {
-  flex: 1;
-  padding: 12px;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  background: url("https://i.imgur.com/7b1q8Zd.png");
-  background-size: cover;
+  background: linear-gradient(
+    180deg,
+    #0b141a 0%,
+    #0f1b24 50%,
+    #0b141a 100%
+  );
 }
 
 body.light .chatContainer {
