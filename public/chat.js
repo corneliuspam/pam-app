@@ -62,12 +62,17 @@ sendBtn.addEventListener("click", () => {
   msgInput.value = "";
 });
 
-// Press Enter to send
-msgInput.addEventListener("keyup", (e) => {
-  if (e.key === "Enter") sendBtn.click();
+sendBtn.addEventListener("click", () => {
+  const msg = msgInput.value.trim();
+  if (!msg) return;
+
+  const username = localStorage.getItem("user");
+  const photo = localStorage.getItem("photo");
+
+  socket.emit("chat message", { username, photo, message: msg, time: new Date().toLocaleTimeString() });
+  msgInput.value = "";
 });
 
-// ===== RECEIVE MESSAGE =====
 socket.on("chat message", (data) => {
   const div = document.createElement("div");
   div.classList.add(data.username === localStorage.getItem("user") ? "me" : "other");
