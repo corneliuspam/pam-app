@@ -1,15 +1,4 @@
-html, body {
-  height: 100%;
-}
-
-.app {
-  height: 100dvh; /* Android-safe viewport */
-  display: flex;
-  flex-direction: column;
-  background: #0b141a;
-}
-
-/* ================= RESET ================= */
+/* ================= GLOBAL ================= */
 * {
   margin: 0;
   padding: 0;
@@ -17,73 +6,17 @@ html, body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont;
 }
 
-/* ================= BODY ================= */
-body {
-  height: 100vh;
-  background: #0b141a;
-  color: #e9edef;
+html, body {
+  height: 100%;
+}
+
+/* ================= APP WRAPPER ================= */
+.app {
+  height: 100dvh; /* Android-safe viewport */
   display: flex;
   flex-direction: column;
-  overflow: hidden;
-}
-
-/* ================= LOGIN PAGE ================= */
-.login-body {
-  background: linear-gradient(160deg, #0b141a, #111b21);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.login-container {
-  width: 90%;
-  max-width: 380px;
-  background: #111b21;
-  padding: 25px;
-  border-radius: 16px;
-  text-align: center;
-  box-shadow: 0 0 40px rgba(0,0,0,0.7);
-}
-
-.login-container h1 {
-  color: #25d366;
-  margin-bottom: 5px;
-}
-
-.subtitle {
-  color: #8696a0;
-  margin-bottom: 20px;
-}
-
-.input-field {
-  width: 100%;
-  padding: 12px;
-  margin-bottom: 10px;
-  background: #202c33;
-  border: none;
-  border-radius: 12px;
-  color: #fff;
-  outline: none;
-}
-
-.file-upload {
-  color: #8696a0;
-}
-
-.btn {
-  width: 100%;
-  padding: 12px;
-  border-radius: 12px;
-  border: none;
-  background: #25d366;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.note {
-  font-size: 12px;
-  color: #8696a0;
-  margin-top: 10px;
+  background: #0b141a;
+  color: #e9edef;
 }
 
 /* ================= HEADER ================= */
@@ -96,6 +29,7 @@ header {
   justify-content: space-between;
   padding: 0 12px;
   border-bottom: 1px solid #2a3942;
+  z-index: 2;
 }
 
 header .left {
@@ -126,11 +60,10 @@ header .right button {
   border: none;
   color: #e9edef;
   font-size: 20px;
-  margin-left: 10px;
   cursor: pointer;
 }
 
-/* ================= CHAT ================= */
+/* ================= CHAT AREA ================= */
 .chatContainer {
   flex: 1;
   padding: 15px;
@@ -188,7 +121,7 @@ header .right button {
 
 /* ================= MESSAGE BAR ================= */
 .inputBox {
-  height: 60px;
+  height: 64px;
   flex-shrink: 0;
   background: #202c33;
   display: flex;
@@ -196,6 +129,7 @@ header .right button {
   padding: 10px;
   gap: 10px;
   border-top: 1px solid #2a3942;
+  z-index: 2;
 }
 
 .inputBox input {
@@ -221,7 +155,7 @@ header .right button {
 /* ================= FLOATING BAR ================= */
 .floatingBar {
   position: fixed;
-  bottom: 140px;
+  bottom: 150px;
   right: 15px;
   display: flex;
   flex-direction: column;
