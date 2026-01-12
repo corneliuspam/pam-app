@@ -103,32 +103,25 @@ window.onclick = (e) => {
   if (e.target === aboutModal) aboutModal.style.display = "none";
 };
 
-// ===== PROFILE MODAL =====
-/*
-(function() {
-  const profileModal = document.getElementById("profileModal");
-  const profileName = document.getElementById("profileName");
-  const profilePicLarge = document.getElementById("profilePicLarge");
-  const profileStatus = document.getElementById("profileStatus");
-  const closeProfile = document.getElementById("closeProfile");
+// Profile Modal Elements
+const profileModal = document.getElementById("profileModal");
+const profileName = document.getElementById("profileName");
+const profilePicLarge = document.getElementById("profilePicLarge");
+const profileStatus = document.getElementById("profileStatus");
+const closeProfile = document.getElementById("closeProfile");
 
-  closeProfile.addEventListener("click", () => profileModal.style.display = "none");
-  window.addEventListener("click", e => {
-    if (e.target === profileModal) profileModal.style.display = "none";
-  });
+// Open modal when clicking avatar
+document.getElementById("userPic").addEventListener("click", () => {
+  profilePicLarge.src = localStorage.getItem("photo");
+  profileName.textContent = localStorage.getItem("user");
+  profileStatus.textContent = "Online"; // you can use your online/offline logic here
+  profileModal.style.display = "flex";
+});
 
-  chatContainer.addEventListener("click", (e) => {
-    const avatar = e.target.closest(".avatar");
-    if (!avatar) return;
-
-    const bubble = avatar.closest(".me, .other")?.querySelector(".bubble span");
-    if (!bubble) return;
-
-    profilePicLarge.src = avatar.src;
-    profileName.textContent = bubble.dataset.username || bubble.textContent;
-    profileStatus.textContent = "Online";
-
-    profileModal.style.display = "flex";
-  });
-})();
-*/
+// Close modal
+closeProfile.addEventListener("click", () => {
+  profileModal.style.display = "none";
+});
+window.addEventListener("click", (e) => {
+  if (e.target === profileModal) profileModal.style.display = "none";
+});
