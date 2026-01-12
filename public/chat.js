@@ -144,3 +144,17 @@ window.addEventListener("click", (e) => {
     bioEditor.style.display = "none";
   };
 })();
+
+// ===== EMOJI PICKER =====
+(function () {
+  const picker = document.querySelector(".emoji-picker");
+  const input = document.getElementById("messageInput");
+  if (!picker || !input) return;
+
+  picker.querySelectorAll("span, text").forEach(emoji => {
+    emoji.addEventListener("click", () => {
+      input.value += emoji.textContent; // append emoji to input
+      input.focus();
+    });
+  });
+})();
