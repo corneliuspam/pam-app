@@ -53,17 +53,17 @@ function sendMessage() {
 
 // Receive messages
 socket.on("chat message", (data) => {
-  const div = document.createElement("div");
-  div.classList.add(data.username === localStorage.getItem("user") ? "me" : "other");
+  const wrapper = document.createElement("div");
+  wrapper.className = data.username === localStorage.getItem("user") ? "me" : "other";
 
-  div.innerHTML = `
-    <img src="${data.photo}" />
-    <div>
-      ${data.message}
-      <small>${data.time}</small>
+  wrapper.innerHTML = `
+    <img class="avatar" src="${data.photo}" />
+    <div class="bubble">
+      <span class="msgText">${data.message}</span>
+      <small class="time">${data.time}</small>
     </div>
   `;
 
-  chatContainer.appendChild(div);
+  chatContainer.appendChild(wrapper);
   chatContainer.scrollTop = chatContainer.scrollHeight;
 });
