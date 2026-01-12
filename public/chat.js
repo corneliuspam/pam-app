@@ -94,3 +94,26 @@ closeAbout.onclick = () => {
 window.onclick = (e) => {
   if (e.target === aboutModal) aboutModal.style.display = "none";
 };
+
+// Profile Modal Elements
+const profileModal = document.getElementById("profileModal");
+const profileName = document.getElementById("profileName");
+const profilePicLarge = document.getElementById("profilePicLarge");
+const profileStatus = document.getElementById("profileStatus");
+const closeProfile = document.getElementById("closeProfile");
+
+// Open modal when clicking avatar
+document.getElementById("userPic").addEventListener("click", () => {
+  profilePicLarge.src = localStorage.getItem("photo");
+  profileName.textContent = localStorage.getItem("user");
+  profileStatus.textContent = "Online"; // you can use your online/offline logic here
+  profileModal.style.display = "flex";
+});
+
+// Close modal
+closeProfile.addEventListener("click", () => {
+  profileModal.style.display = "none";
+});
+window.addEventListener("click", (e) => {
+  if (e.target === profileModal) profileModal.style.display = "none";
+});
