@@ -104,6 +104,7 @@ window.onclick = (e) => {
 };
 
 // ===== PROFILE MODAL =====
+/*
 (function() {
   const profileModal = document.getElementById("profileModal");
   const profileName = document.getElementById("profileName");
@@ -111,29 +112,23 @@ window.onclick = (e) => {
   const profileStatus = document.getElementById("profileStatus");
   const closeProfile = document.getElementById("closeProfile");
 
-  // Close modal safely
   closeProfile.addEventListener("click", () => profileModal.style.display = "none");
   window.addEventListener("click", e => {
     if (e.target === profileModal) profileModal.style.display = "none";
   });
 
-  // Safe click listener for avatars
   chatContainer.addEventListener("click", (e) => {
     const avatar = e.target.closest(".avatar");
-    if (!avatar) return; // ignore other clicks
+    if (!avatar) return;
 
     const bubble = avatar.closest(".me, .other")?.querySelector(".bubble span");
     if (!bubble) return;
 
-    const username = bubble.dataset.username || bubble.textContent;
-    const photoSrc = avatar.src;
-    const status = avatar.dataset.status || "Online";
-
-    // Populate modal
-    profilePicLarge.src = photoSrc;
-    profileName.textContent = username;
-    profileStatus.textContent = status;
+    profilePicLarge.src = avatar.src;
+    profileName.textContent = bubble.dataset.username || bubble.textContent;
+    profileStatus.textContent = "Online";
 
     profileModal.style.display = "flex";
   });
 })();
+*/
