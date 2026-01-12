@@ -381,3 +381,19 @@ body.light .modalBox {
   padding: 8px;
   resize: none;
 }
+
+.emoji-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: 5px;
+  background: #202c33; /* matches dark mode */
+  border-radius: 8px;
+  max-width: 300px;
+  margin-top: 5px;
+}
+
+.emoji-picker span {
+  cursor: pointer;
+  font-size: 20px;
+}
